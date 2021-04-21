@@ -1,0 +1,54 @@
+.index-page{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .index-header{}
+  .index-form{
+    padding: 30px;
+  }
+  .index-content{
+    display: flex;
+    flex: 1;
+    overflow-y: hidden;
+    .content-item{
+      flex: 1;
+      flex-shrink: 0;
+      padding:  30px;
+      overflow-y: auto;
+      .item{
+        .item-name{
+          margin-left: 20px;
+        }
+        .item-del{
+          cursor: pointer;
+          font-size: 18px;
+          margin-left: 20px;
+        }
+      }
+      .item-thumbnail, .sprite-box{
+        display: inline-block;
+        background-image: url(../../static/images/bg.png);
+      }
+      .code-box{
+        margin: 25px 0;
+        padding: 0 15px;
+        background: rgb(40, 44, 52);
+        color: rgb(255, 255, 255);
+        border-radius: 10px;
+        overflow: auto;
+        tab-size: 1.5em;
+        pre{
+          margin: 1rem;
+          font-size: 14px;
+          line-height: 20px;
+          white-space: pre-wrap;
+          word-break: break-word;
+          height: auto;
+          .code{
+
+          }
+        }
+      }
+    }
+  }
+}

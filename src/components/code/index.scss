@@ -1,0 +1,43 @@
+.code-box{
+  position: relative;
+  margin: 25px 0;
+  padding: 0 15px;
+  background: rgb(40, 44, 52);
+  color: rgb(255, 255, 255);
+  border-radius: 10px;
+  overflow: auto;
+  tab-size: 1.5em;
+  &:hover{
+    .code-copy{
+      display: block;
+    }
+  }
+  .code-copy{
+    display: none;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    color: hsla(0,0%,54.9%,.8);
+    transition: color .1s;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    &:hover{
+      color: #8c8c8c;;
+    }
+  }
+  pre{
+    margin: 1rem;
+    font-size: 14px;
+    line-height: 20px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    height: auto;
+    .code{
+
+    }
+  }
+}

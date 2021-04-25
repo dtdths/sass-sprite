@@ -29,26 +29,6 @@
         display: inline-block;
         background-image: url(../../static/images/bg.png);
       }
-      .code-box{
-        margin: 25px 0;
-        padding: 0 15px;
-        background: rgb(40, 44, 52);
-        color: rgb(255, 255, 255);
-        border-radius: 10px;
-        overflow: auto;
-        tab-size: 1.5em;
-        pre{
-          margin: 1rem;
-          font-size: 14px;
-          line-height: 20px;
-          white-space: pre-wrap;
-          word-break: break-word;
-          height: auto;
-          .code{
-
-          }
-        }
-      }
     }
   }
 }

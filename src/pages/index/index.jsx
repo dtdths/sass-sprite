@@ -4,6 +4,7 @@ import './index.scss';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import layout from 'layout';
 import { DeleteTwoTone } from '@ant-design/icons';
+import Code from '../../components/code';
 import utils from '../../utils';
 
 const { Option } = Select;
@@ -22,13 +23,13 @@ function Index() {
   const [fileList, setFileList] = useState([]);
 
   const [setting, setSetting] = useState(() => ({
-    prefix: 'icon',
+    prefix: 'sprite-icon',
     spacing: 10,
     codeLanguage: 'scss',
   }), []);
 
   // 获得布局和雪碧图url
-  const spriteLayout = useCallback((list = []) => {
+  const spriteLayout = useCallback((list = [], spacing = 0) => {
     if (!list?.length) {
       return [
         {
@@ -41,8 +42,8 @@ function Index() {
     const layer = layout('binary-tree');
     list.forEach(item => {
       layer.addItem({
-        height: item.height,
-        width: item.width,
+        height: item.height + spacing,
+        width: item.width + spacing,
         meta: item,
       });
     })
@@ -51,7 +52,7 @@ function Index() {
     const oCtx = nodeCanvas.getContext('2d');
     // 渲染canvas
     info2.items.forEach(item => {
-      oCtx.drawImage(item.meta.oImg, item.x, item.y, item.width, item.height);
+      oCtx.drawImage(item.meta.oImg, item.x, item.y, item.meta.width, item.meta.height);
     });
 
     const url = nodeCanvas.toDataURL();
@@ -90,9 +91,13 @@ function Index() {
   }, []);
 
   const onSettingChange = useCallback((key, value) => {
+    let _value = value;
+    if (key === 'spacing') {
+      _value = Math.max(0, parseInt(value));
+    }
     setSetting(obj => ({
       ...obj,
-      [key]: value,
+      [key]: _value,
     }));
   }, []);
 
@@ -113,20 +118,21 @@ function Index() {
    * @param {*} item 单个图标数据
    */
   const renderItemCode = useCallback((item) => {
-    return (`.${utils.fileName2ClassName(item.meta.name)}{
+    const _className = setting.prefix ? `${setting.prefix }_${utils.fileName2ClassName(item.meta.name)}` : utils.fileName2ClassName(item.meta.name);
+    return (`.${_className}{
   width: ${item.meta.width}px;
   height: ${item.meta.height}px;
   background-position: -${item.x}px -${item.y}px;
 }`)
-  }, []);
+  }, [setting.prefix]);
 
   useEffect(() => {
     (async () => {
       const imgList = await getImgCanvas(fileList);
-      const [layoutData, spriteImg] = spriteLayout(imgList);
+      const [layoutData, spriteImg] = spriteLayout(imgList, setting.spacing);
       setImgData({ ...layoutData, spriteImg });
     })()
-  }, [fileList, getImgCanvas, spriteLayout]);
+  }, [fileList, getImgCanvas, spriteLayout, setting]);
 
   return (
     <div className="index-page">
@@ -162,17 +168,21 @@ function Index() {
               <div className="item-header">
                 <div className="item-thumbnail">
                   <img src={item.meta.url} alt={item.meta.name} />
+                  {/* <div style={{
+                    backgroundImage: `url(${imgData.spriteImg})`,
+                    backgroundRepeat: `no-repeat`,
+                    backgroundSize: `${imgData.width}px ${imgData.height}px`,
+                    width: `${item.meta.width}px`,
+                    height: `${item.meta.height}px`,
+                    backgroundPosition: `-${item.x}px -${item.y}px`,
+                  }} /> */}
                 </div>
                 <span className="item-name">{item.meta.name}</span>
                 <DeleteTwoTone className="item-del" onClick={() => onDel(item.meta.uid)} twoToneColor="#f81d22" />
               </div>
-              <div className="code-box">
-                <pre>
-                  <code>
-                    {renderItemCode(item)}
-                  </code>
-                </pre>
-              </div>
+              <Code>
+                {renderItemCode(item)}
+              </Code>
             </div>))}
           </div>
         </div>
@@ -181,20 +191,16 @@ function Index() {
             <div className="sprite-box">
               <img className="sprite-img" src={imgData.spriteImg} alt="sprite" />
             </div>
-            <div className="code-box">
-              <pre>
-                <code>
-                  {`.${setting.prefix}{
-  background-image: url(//img10.360buyimg.com/ppershou/s100x100_jfs/t1/159572/8/19730/4560/607971f4E4faf8a7c/4a561c184f08eb25.jpg);
+            <Code>
+            {`.${setting.prefix}{
+  background-image: url(${imgData.spriteImg});
   background-repeat: no-repeat;
   background-size: ${imgData.width}px ${imgData.height}px;
   ${imgData?.items?.map(item => `
 &${renderItemCode(item)}
   `).join('')}
 }`}
-                </code>
-              </pre>
-            </div>
+            </Code>
           </div>}
         </div>
       </div>
